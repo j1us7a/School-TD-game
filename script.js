@@ -108,7 +108,7 @@ document.addEventListener("click", function(e) {
     }
 })
 
-//tower dmg
+//tower dmg yea
 let dmgCycle = 3000;
 
 function towerDmg() {
@@ -120,7 +120,7 @@ function towerDmg() {
 
             if (hyp < towers[i].r && !towers[i].hasKill) {
                 towers[i].hasKill = true;
-                mobs[j].hp -= towers[i].dmg;
+                mobs[j].hp -= towers[i].dmg; 
                 
                 if (mobs[j].hp <= 0) {
                     mobs.splice(j, j+1);
