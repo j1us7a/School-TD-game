@@ -108,7 +108,7 @@ document.addEventListener("click", function(e) {
     }
 })
 
-//tower dmg yea
+//Tower dmg
 let dmgCycle = 3000;
 
 function towerDmg() {
