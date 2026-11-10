@@ -1,0 +1,13 @@
+Detta är bara dem första tankarna och ordningen / sakerna i listan kommer definitift att ändras!
+
+Jag ska göra ett spel som liknar: Bloons TD.
+Ett enkelt tower defence spel med ca 4 gubbar med unika attacker.
+
+1. Gör en bana och fiende
+2. Skapa första gubben med dens attacker
+3. Göra uppgraderingar
+4. Fler gubbar och fiender
+5. HP bar
+6. Starta om knapp m.m.
+7. hitbox (ej kunna placera på väg etc.)
+8. Enkel design och tema
