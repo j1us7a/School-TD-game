@@ -4,23 +4,26 @@ let ctx = canvas.getContext("2d");
 
 let tickSpeed = 16; // ~60fps
 
+//VARIABLES FOR HTML STATS
+let kills = 0;
+let towerCount = 0;
+
 //Enemy spawning
-let enemyTimer = 1000;
+let enemyTimer = 2000;
 
 function spawnMob() {
-    mobs.push({x: path[0].x - 10, y: path[0].y - 10, w:20, h:20, vx:0, vy:0, hp:1, order:0, v:1});
+    mobs.push({x:path[0].x - 10, y:path[0].y - 10, w:20, h:20, vx:0, vy:0, hp:1, order:0, v:1, dmg:1});
 }
 //Turn on game
-let gameOn = 0;
+let gameOn = false;
 
 function startGame() {
-    if (gameOn == 0) {
-        //Start movement
+    if (gameOn == false) {
         setInterval(mobMovement, tickSpeed);
-        gameOn = 1;
-
-        //Spawn mobs
         setInterval(spawnMob, enemyTimer);
+        setInterval(towerDmg, dmgCycle);
+
+        gameOn = true;
     }
 }
 
@@ -48,6 +51,8 @@ let path = [
 //Enemy array
 let mobs = [];
 
+let hp = 100;
+
 //Mob movements
 function mobMovement() {
     for(let i=0; i < mobs.length; i++) {
@@ -61,9 +66,11 @@ function mobMovement() {
         if(mobs[i].x + mobs[i].w/2 == path[mobs[i].order+1].x && mobs[i].y + mobs[i].h/2 == path[mobs[i].order+1].y) {
             if(mobs[i].order == path.length - 2) {
                 //remove mob when at finish
-                mobs.splice(i,i+1)
-                console.log("mob " + i + " reached the end");
-                
+                mobs.splice(i,1);
+                //remove hp
+                hp -= mobs[i].dmg;
+                document.getElementById("hpBarColor").style.width = hp + "%";
+                document.getElementById("hpNum").innerHTML = "HP: " + hp;
             }
             else {
                 //change path to next point
@@ -84,16 +91,20 @@ document.addEventListener("mousemove", function(e) {
     mouse.x = e.clientX - rect.left;
     mouse.y = e.clientY - rect.top;
 })
+//Money
+let money = 10;
 
 //Placing
 function selectTower1() {
-    if (tower1Selected == false) {
+    if (tower1Selected == false && money >= 10) {
         tower1Selected = true;
-        document.getElementById("tower1Button").textContent = "Deselect Tower 1";
+        money -= 10;
+        document.getElementById("moneyCount").innerHTML = "$: " + money;
+        document.getElementById("tower1Button").innerHTML = "Deselect Tower 1";
     }
     else {
         tower1Selected = false;
-        document.getElementById("tower1Button").textContent = "Select Tower 1";
+        document.getElementById("tower1Button").innerHTML = "$10 Tower 1";
     }
 }
 
@@ -105,6 +116,8 @@ let tower1r = 100;
 document.addEventListener("click", function(e) {
     if (tower1Selected == true && mouse.x < 800 && mouse.y < 500) {
         towers.push({x: Math.round((mouse.x - 10) / 40) * 40, y: Math.round((mouse.y - 10) / 40) * 40, w: 30, h: 30, dmg: 1, hasKill: false, r:100});
+        towerCount = towers.length;
+        document.getElementById("towerCount").innerHTML = "Towers: " + towerCount;
     }
 })
 
@@ -123,37 +136,15 @@ function towerDmg() {
                 mobs[j].hp -= towers[i].dmg; 
                 
                 if (mobs[j].hp <= 0) {
-                    mobs.splice(j, j+1);
-                    console.log("mob " + j + " died");
+                    mobs.splice(j, 1);
+                    kills += 1;
+                    document.getElementById("killCount").innerHTML = "Kills: " + kills;
                 }
             }
         }
         towers[i].hasKill = false;
     }
 }
-setInterval(towerDmg, dmgCycle);
-
-/*
-function towerDmg() {
-    for (let i = 0; i < towers.length; i++){
-        for (let j = 0; j < mobs.length; j++){
-            x = towers[i].x - mobs[j].x;
-            y = towers[i].y - mobs[j].y;
-            hyp = Math.hypot(x,y);
-            if (hyp < towers[i].r && !towers[i].hasKill) {
-                towers[i].hasKill = true;
-                mobs[j].hp -= towers[i].dmg;
-                if (mobs[j].hp <= 0) {
-                    mobs.splice(j, j+1);
-                    console.log("mob " + j + " died");
-                }
-            }
-        }
-        towers[i].hasKill = false;
-    }
-}
-setInterval(towerDmg, dmgCycle);
-*/
 
 //MAINLOOP
 function mainloop() {
@@ -193,6 +184,15 @@ function mainloop() {
         ctx.fillStyle = "#ffffff44";
         ctx.fill();
         ctx.stroke;
+    }
+
+    //Too expencive
+    if (money < 10) {
+        document.getElementById("tower1Button").style.backgroundColor = "#ff0000";
+    }
+    else {
+        
+        document.getElementById("tower1Button").style.backgroundColor = "#ffffff";
     }
 
     requestAnimationFrame(mainloop);

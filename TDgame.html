@@ -8,9 +8,22 @@
 </head>
 <body>
     <div id="wrapper">
+        <div id="hpBar">
+            <div id="hpBarColor"></div>
+            <p id="hpNum">HP: 100</p>
+        </div>
+        <div id="info">
+            <p id="killCount">Kills: 0</p>
+            <p id="towerCount">Towers: 0</p>
+        </div>
         <canvas id="main" width="800" height="500"></canvas>
-        <button id="tower1Button" onclick="selectTower1()">Select Tower 1</button> <br>
-        <button id="startButton" onclick="startGame()">Start Game</button>
+        <div id="money">
+            <p id="moneyCount">$: 10</p>
+        </div>
+        <div id="gameControls">
+            <button id="tower1Button" onclick="selectTower1()">$10 Tower 1</button> <br>
+            <button id="startButton" onclick="startGame()">Start Game</button>
+        </div>
 
         <script src="script.js"></script>
     </div>
