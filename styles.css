@@ -72,30 +72,32 @@ body {
     margin: auto;
 }
 
-#money {
-    grid-column: 3;
-    grid-row: 2;
-
-    background-color: #121212;
-    color: white;
-    margin: 6px;
-    border-radius: 16px;
-    padding: 0 12px 0 12px;
-
-    font-size: 200%;
-    
-}
 
 #gameControls {
     grid-column: 3;
     grid-row: 2;
-
+    
+    width:fit-content;
+    
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-
+    
     margin: 6px;
     padding: 0 12px 12px 12px;    
+    
+    background-color: #121212;
+    color: white;
+    margin: 6px;
+    border-radius: 16px;
+    #money {
+        grid-column: 3;
+        grid-row: 2;
+        padding: 0 12px 0 12px;
+    
+        font-size: 200%;
+        
+    }
 
     #startButton {
         width: auto;
