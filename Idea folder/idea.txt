@@ -5,9 +5,9 @@ Ett enkelt tower defence spel med ca 4 gubbar med unika attacker.
 
 1. Gör en bana och fiende
 2. Skapa första gubben med dens attacker
-3. Göra uppgraderingar
-4. Fler gubbar och fiender
 5. HP bar
+4. Fler gubbar och fiender
+3. Göra uppgraderingar
 6. Starta om knapp m.m.
 7. hitbox (ej kunna placera på väg etc.)
 8. Enkel design och tema
