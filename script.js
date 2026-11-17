@@ -43,10 +43,12 @@ function spawnMob() {
     }
     
     if (round == 1) {
+        enemyTimer = 4000;
         mobs.push({x:path[0].x - 10, y:path[0].y - 10, w:20, h:20, vx:0, vy:0, hp:3, order:0, v:0.5, dmg:5, color: "orange"});
     }
     
-    if (round == 2) {
+    if (round >= 2) {
+        enemyTimer = 3000;
         mobs.push({x:path[0].x - 10, y:path[0].y - 10, w:20, h:20, vx:0, vy:0, hp:3, order:0, v:0.5, dmg:5, color: "orange"});
         mobs.push({x:path[0].x - 10, y:path[0].y - 10, w:20, h:20, vx:0, vy:0, hp:1, order:0, v:1, dmg:1, color: "red"});
     }
@@ -54,17 +56,17 @@ function spawnMob() {
 
 //Enemy path
 let path = [
-    {x:-30, y:60, vx:1, vy:0},
-    {x:120, y:60, vx:0, vy:1},
-    {x:120, y:360, vx:1, vy:0},
-    {x:240, y:360, vx:0, vy:1},
-    {x:240, y:450, vx:1, vy:0},
-    {x:360, y:450, vx:0, vy:-1},
-    {x:360, y:240, vx:-1, vy:0},
-    {x:240, y:240, vx:0, vy:-1},
-    {x:240, y:120, vx:1, vy:0},
-    {x:540, y:120, vx:0, vy:1},
-    {x:540, y:630, vx:0, vy:0},
+    {x:-30, y:75, vx:1, vy:0},
+    {x:135, y:75, vx:0, vy:1},
+    {x:135, y:375, vx:1, vy:0},
+    {x:255, y:375, vx:0, vy:1},
+    {x:255, y:465, vx:1, vy:0},
+    {x:375, y:465, vx:0, vy:-1},
+    {x:375, y:255, vx:-1, vy:0},
+    {x:255, y:255, vx:0, vy:-1},
+    {x:255, y:135, vx:1, vy:0},
+    {x:555, y:135, vx:0, vy:1},
+    {x:555, y:630, vx:0, vy:0},
 ]
 
 //Enemy array
@@ -97,31 +99,75 @@ function mobMovement() {
     }
 }
 //TOWERPLACING
-//declare mouse
+//Mouse Position
 let mouse = {x:0, y:0, down: false,}
 
-//mousePos
+let towerMouseX = 0;
+let towerMouseY = 0;
 document.addEventListener("mousemove", function(e) {
     //get canvas offset
     let rect = canvas.getBoundingClientRect();
     //overwrite pos
     mouse.x = e.clientX - rect.left;
     mouse.y = e.clientY - rect.top;
+    
+    towerMouseX = Math.round((mouse.x - 15) / 30) * 30 + 15;
+    towerMouseY = Math.round((mouse.y - 15) / 30) * 30 + 15;
 })
-//Money
-let money = 15;
+
 
 //Placing
+let towers = [];
+let tower1Selected = false;
+let tower1r = 100;
+
+let canPlace = true;
+function checkHitbox() {
+    canPlace = true;
+    for (let i = 1; i < path.length; i++) {
+        if (path[i-1].vx > 0 || path[i-1].vy > 0) {
+            if (towerMouseX + 15 >= path[i -1].x - 10 
+            && towerMouseX - 15 <= path[i].x + 10
+            && towerMouseY + 15 >= path[i -1].y - 10
+            && towerMouseY - 15 <= path[i].y + 10) {
+                canPlace = false;
+            }
+        }
+        if (path[i-1].vx < 0 || path[i-1].vy < 0) {
+            if (towerMouseX - 15 <= path[i -1].x + 10 
+            && towerMouseX + 15>= path[i].x - 10
+            && towerMouseY - 15<= path[i -1].y + 10
+            && towerMouseY + 15>= path[i].y - 10) {
+                canPlace = false;
+            }
+        }
+    }
+    for (let i = 0; i < towers.length; i++) {
+        if (towerMouseX == towers[i].x && towerMouseY == towers[i].y) {
+            canPlace = false;
+        }
+    }
+}
+
+let radiusPlaceColor = "#ffffff44";
+
 function towerHighlight() {
     ctx.beginPath();
-    ctx.arc(Math.round((mouse.x - 10) / 30) * 30 + 15, Math.round((mouse.y - 10) / 30) * 30 + 15, 15, 0, 2 * Math.PI);
+    ctx.arc(towerMouseX, towerMouseY, 15, 0, 2 * Math.PI);
     ctx.fillStyle = "#0000ff44";
     ctx.fill();
     ctx.stroke;
 
+    if (canPlace == false) {
+        radiusPlaceColor = "#ff000044";
+    }
+    if (canPlace == true) {
+        radiusPlaceColor = "#ffffff44";
+    }
+
     ctx.beginPath();
-    ctx.arc(Math.round((mouse.x - 10) / 30) * 30 + 15, Math.round((mouse.y - 10) / 30) * 30 + 15, tower1r, 0, 2 * Math.PI);
-    ctx.fillStyle = "#ffffff44";
+    ctx.arc(towerMouseX, towerMouseY, tower1r, 0, 2 * Math.PI);
+    ctx.fillStyle = radiusPlaceColor;
     ctx.fill();
     ctx.stroke;
 }
@@ -137,15 +183,12 @@ function selectTower1() {
     }
 }
 
-//declare towers
-let towers = [];
-let tower1Selected = false;
-let tower1r = 100;
+let money = 15;
 
 document.addEventListener("click", function(e) {
-    if (tower1Selected == true && mouse.x < canvas.width && mouse.y < canvas.height && money >= 10) {
+    if (tower1Selected == true && mouse.x < canvas.width && mouse.y < canvas.height && money >= 10 && canPlace == true) {
         money -= 10;
-        towers.push({x: Math.round((mouse.x - 10) / 30) * 30 + 15, y: Math.round((mouse.y - 10) / 30) * 30 + 15, w: 30, dmg: 1, hasKill: false, r:100});
+        towers.push({x: towerMouseX, y: towerMouseY, w: 30, dmg: 1, hasKill: false, r:100});
         towerCount = towers.length;
         document.getElementById('towerCount').innerHTML = "Towers: " + towerCount;
     }
@@ -186,7 +229,7 @@ function mainloop() {
     //path stuff
     ctx.beginPath();
     ctx.moveTo(path[0].x, path[0].y);
-    for (let i = 0;i < path.length;i++) {
+    for (let i = 0; i < path.length; i++) {
         ctx.fillStyle = "black";
         ctx.lineTo(path[i].x, path[i].y);
         ctx.lineWidth = 20;
@@ -211,6 +254,7 @@ function mainloop() {
     //mob selection highlight
     if (tower1Selected == true) {
         towerHighlight();
+        checkHitbox();
     }
 
     //Too expencive
