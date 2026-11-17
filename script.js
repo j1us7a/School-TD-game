@@ -10,6 +10,7 @@ let towerCount = 0;
 
 //Enemy spawning
 let round = 0;
+let roundDelaySeconds = 60;
 let enemyTimer = 2000;
 
 //Turn on game
@@ -20,9 +21,15 @@ function startGame() {
         setInterval(mobMovement, tickSpeed);
         setInterval(spawnMob, enemyTimer);
         setInterval(towerDmg, dmgCycle);
+        setInterval(changeRound, roundDelaySeconds * 1000)
         
         gameOn = true;
     }
+}
+
+//Rounds
+function changeRound() {
+    round += 1;
 }
 
 //Canvas variables
@@ -46,7 +53,6 @@ function spawnMob() {
 }
 
 //Enemy path
-/* UPDATED PATH TO 30px STANDARD
 let path = [
     {x:-30, y:60, vx:1, vy:0},
     {x:120, y:60, vx:0, vy:1},
@@ -59,21 +65,6 @@ let path = [
     {x:240, y:120, vx:1, vy:0},
     {x:540, y:120, vx:0, vy:1},
     {x:540, y:630, vx:0, vy:0},
-]
-*/
-
-let path = [
-    {x:-50, y:50, vx:1, vy:0},
-    {x:100, y:50, vx:0, vy:1},
-    {x:100, y:300, vx:1, vy:0},
-    {x:200, y:300, vx:0, vy:1},
-    {x:200, y:400, vx:1, vy:0},
-    {x:300, y:400, vx:0, vy:-1},
-    {x:300, y:200, vx:-1, vy:0},
-    {x:200, y:200, vx:0, vy:-1},
-    {x:200, y:100, vx:1, vy:0},
-    {x:500, y:100, vx:0, vy:1},
-    {x:500, y:550, vx:0, vy:0},
 ]
 
 //Enemy array
@@ -121,6 +112,20 @@ document.addEventListener("mousemove", function(e) {
 let money = 15;
 
 //Placing
+function towerHighlight() {
+    ctx.beginPath();
+    ctx.arc(Math.round((mouse.x - 10) / 30) * 30 + 15, Math.round((mouse.y - 10) / 30) * 30 + 15, 15, 0, 2 * Math.PI);
+    ctx.fillStyle = "#0000ff44";
+    ctx.fill();
+    ctx.stroke;
+
+    ctx.beginPath();
+    ctx.arc(Math.round((mouse.x - 10) / 30) * 30 + 15, Math.round((mouse.y - 10) / 30) * 30 + 15, tower1r, 0, 2 * Math.PI);
+    ctx.fillStyle = "#ffffff44";
+    ctx.fill();
+    ctx.stroke;
+}
+
 function selectTower1() {
     if (tower1Selected == false) {
         tower1Selected = true;
@@ -183,7 +188,7 @@ function mainloop() {
     ctx.moveTo(path[0].x, path[0].y);
     for (let i = 0;i < path.length;i++) {
         ctx.fillStyle = "black";
-        ctx.lineTo(path[i].x + 15, path[i].y + 15);
+        ctx.lineTo(path[i].x, path[i].y);
         ctx.lineWidth = 20;
         ctx.stroke();
     }
@@ -205,19 +210,7 @@ function mainloop() {
 
     //mob selection highlight
     if (tower1Selected == true) {
-        //Tower
-        ctx.beginPath();
-        ctx.arc(Math.round((mouse.x - 10) / 30) * 30 + 15, Math.round((mouse.y - 10) / 30) * 30 + 15, 15, 0, 2 * Math.PI);
-        ctx.fillStyle = "#0000ff44";
-        ctx.fill();
-        ctx.stroke;
-
-        // Range
-        ctx.beginPath();
-        ctx.arc(Math.round((mouse.x - 10) / 30) * 30 + 15, Math.round((mouse.y - 10) / 30) * 30 + 15, tower1r, 0, 2 * Math.PI);
-        ctx.fillStyle = "#ffffff44";
-        ctx.fill();
-        ctx.stroke;
+        towerHighlight();
     }
 
     //Too expencive
@@ -229,7 +222,7 @@ function mainloop() {
         document.getElementById('tower1Button').style.backgroundColor = "#ffffff";
     }
 
-    //update text
+    //Update text
     if (hp <= 0) {
         document.getElementById('hpBarColor').style.width = 0;
         hp = 0;
@@ -239,7 +232,7 @@ function mainloop() {
     }
     document.getElementById('moneyCount').innerHTML = "$: " + money;
     document.getElementById('hpNum').innerHTML = "HP: " + hp;
-
+    document.getElementById('roundCount').innerHTML = "Round: " + round;
     
     requestAnimationFrame(mainloop);
 }
