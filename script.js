@@ -11,6 +11,7 @@ let kills = 0;
 let towerCount = 0;
 
 let gameOn = false;
+let round = 0;
 
 function startGame() {
     if (gameOn == false) {
@@ -18,6 +19,7 @@ function startGame() {
         setInterval(spawnMob, enemyTimer);
         setInterval(towerDmg, dmgCycle);
         setInterval(changeRound, roundDelaySeconds * 1000)
+        round += 1;
         
         gameOn = true;
     }
@@ -27,22 +29,21 @@ function changeRound() {
     round += 1;
 }
 
-let round = 0;
 let roundDelaySeconds = 60;
 let enemyTimer = 2000;
 
 //ENEMY CREATION AND MOVEMENT
 function spawnMob() {
-    if (round == 0) {
+    if (round == 1) {
         mobs.push({x:path[0].x - 10, y:path[0].y - 10, w:20, h:20, vx:0, vy:0, hp:1, order:0, v:1, dmg:1, color: "red"});
     }
     
-    if (round == 1) {
+    if (round == 2) {
         enemyTimer = 4000;
         mobs.push({x:path[0].x - 10, y:path[0].y - 10, w:20, h:20, vx:0, vy:0, hp:3, order:0, v:0.5, dmg:5, color: "orange"});
     }
     
-    if (round >= 2) {
+    if (round >= 3) {
         enemyTimer = 3000;
         mobs.push({x:path[0].x - 10, y:path[0].y - 10, w:20, h:20, vx:0, vy:0, hp:3, order:0, v:0.5, dmg:5, color: "orange"});
         mobs.push({x:path[0].x - 10, y:path[0].y - 10, w:20, h:20, vx:0, vy:0, hp:1, order:0, v:1, dmg:1, color: "red"});
@@ -164,11 +165,11 @@ function selectTower1() {
         selectedTowerColor = "#0000ff44"
         selectedTowerRange = 100;
         document.getElementById('tower1Button').innerHTML = "Deselect Tower 1";
-        document.getElementById('tower2Button').innerHTML = "$25 Tower 2";
+        document.getElementById('tower2Button').innerHTML = "🪙20 Tower 2";
     }
     else {
         tower1Selected = false;
-        document.getElementById('tower1Button').innerHTML = "$10 Tower 1";
+        document.getElementById('tower1Button').innerHTML = "🪙10 Tower 1";
     }
 }
 
@@ -179,11 +180,11 @@ function selectTower2() {
         selectedTowerColor = "#ff00ff44"
         selectedTowerRange = 75;
         document.getElementById('tower2Button').innerHTML = "Deselect Tower 2";
-        document.getElementById('tower1Button').innerHTML = "$10 Tower 1";
+        document.getElementById('tower1Button').innerHTML = "🪙10 Tower 1";
     }
     else {
         tower2Selected = false;
-        document.getElementById('tower2Button').innerHTML = "$25 Tower 2";
+        document.getElementById('tower2Button').innerHTML = "🪙20 Tower 2";
     }
 }
 
@@ -195,8 +196,8 @@ document.addEventListener("click", function(e) {
         towers.push({x: towerMouseX, y: towerMouseY, w: 30, dmg: 1, hasKill: false, r:100, color: "#0000aa"});
         towerCount = towers.length;
     }
-    if (tower2Selected == true && mouse.x < canvas.width && mouse.y < canvas.height && money >= 25 && canPlace == true) {
-        money -= 25;
+    if (tower2Selected == true && mouse.x < canvas.width && mouse.y < canvas.height && money >= 20 && canPlace == true) {
+        money -= 20;
         towers.push({x: towerMouseX, y: towerMouseY, w: 30, dmg: 2, hasKill: false, r:75, color: "#aa00aa"});
         towerCount = towers.length;
     }
@@ -260,19 +261,20 @@ function mainloop() {
         checkHitbox();
     }
 
-    if (money < 10) {document.getElementById('tower1Button').style.backgroundColor = "#ff0000";}
-    else {document.getElementById('tower1Button').style.backgroundColor = "#ffffff";}
+    if (money < 10) {document.getElementById('tower1Button').style.backgroundColor = "#b00000";}
+    else {document.getElementById('tower1Button').style.backgroundColor = "#4f4f4f";}
 
-    if (money < 25) {document.getElementById('tower2Button').style.backgroundColor = "#ff0000";}
-    else {document.getElementById('tower2Button').style.backgroundColor = "#ffffff";}
+    if (money < 20) {document.getElementById('tower2Button').style.backgroundColor = "#b00000";}
+    else {document.getElementById('tower2Button').style.backgroundColor = "#4f4f4f";}
 
     //Update text
     if (hp <= 0) {document.getElementById('hpBarColor').style.width = 0; hp = 0;}
     else {document.getElementById('hpBarColor').style.width = hp + "%";}
-    document.getElementById('moneyCount').innerHTML = "$: " + money;
+    document.getElementById('moneyCount').innerHTML = "🪙: " + money;
     document.getElementById('hpNum').innerHTML = "HP: " + hp;
     document.getElementById('roundCount').innerHTML = "Round: " + round;
     document.getElementById('towerCount').innerHTML = "Towers: " + towerCount;
+    document.getElementById('mobCount').innerHTML = "Enemies: " + mobs.length;
     
     requestAnimationFrame(mainloop);
 }

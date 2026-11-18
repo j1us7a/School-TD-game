@@ -10,20 +10,31 @@
     <div id="wrapper">
         <div id="hpBar">
             <div id="hpBarColor"></div>
-            <p id="hpNum">HP: -</p>
+            <b id="hpNum">HP: -</b>
+        </div>
+        <div id="tutorial">
+            <p>
+                This is a tower defence:<br><br>
+                You place a tower and then click start.<br>
+                Now there will come enemies that your tower will shoot down.<br><br>
+                You will slowly get money that you can spend on more towers.<br><br>
+                If an enemy reach the end you will take damage.<br><br>
+                Good luck!
+            </p>
         </div>
         <div id="info">
             <p id="roundCount">Round: 0</p>
             <p id="killCount">Kills: 0</p>
             <p id="towerCount">Towers: 0</p>
+            <p id="mobCount">Enemies: 0</p>
         </div>
         <canvas id="main" width="600" height="600"></canvas>
         <div id="gameControls">
             <div id="money">
-                <p id="moneyCount">$: 0</p>
+                <p id="moneyCount">🪙: 0</p>
             </div>
-            <button id="tower1Button" onclick="selectTower1()">$10 Tower 1</button> <br>
-            <button id="tower2Button" onclick="selectTower2()">$25 Tower 2</button> <br>
+            <button id="tower1Button" onclick="selectTower1()">🪙10 Tower 1</button> <br>
+            <button id="tower2Button" onclick="selectTower2()">🪙20 Tower 2</button> <br>
             <button id="startButton" onclick="startGame()">Start Game</button>
         </div>
 
