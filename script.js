@@ -198,7 +198,7 @@ document.addEventListener("click", function(e) {
     }
     if (tower2Selected == true && mouse.x < canvas.width && mouse.y < canvas.height && money >= 20 && canPlace == true) {
         money -= 20;
-        towers.push({x: towerMouseX, y: towerMouseY, w: 30, dmg: 2, hasKill: false, r:75, color: "#aa00aa"});
+        towers.push({x: towerMouseX, y: towerMouseY, w: 30, dmg: 3, hasKill: false, r:75, color: "#aa00aa"});
         towerCount = towers.length;
     }
 })
