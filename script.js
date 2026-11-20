@@ -1,4 +1,3 @@
-
 let canvas = document.getElementById("main");
 let ctx = canvas.getContext("2d");
 
@@ -134,7 +133,7 @@ function checkHitbox() {
 }
 
 let radiusPlaceColor = "#ffffff44";
-let selectedTowerColor = "#fff";
+let selectedTowerColor = "#ffffff";
 let selectedTowerRange = 0;
 
 function towerHighlight() {
@@ -191,12 +190,12 @@ function selectTower2() {
 let money = 15;
 
 document.addEventListener("click", function(e) {
-    if (tower1Selected == true && mouse.x > 0 && mouse.y > 0&& mouse.x < canvas.width && mouse.y < canvas.height && money >= 10 && canPlace == true) {
+    if (tower1Selected == true && mouse.x > 0 && mouse.y > 0 && mouse.x < canvas.width && mouse.y < canvas.height && money >= 10 && canPlace == true) {
         money -= 10;
         towers.push({x: towerMouseX, y: towerMouseY, w: 30, dmg: 1, hasKill: false, r:100, color: "#0000aa"});
         towerCount = towers.length;
     }
-    if (tower2Selected == true && mouse.x < canvas.width && mouse.y < canvas.height && money >= 20 && canPlace == true) {
+    if (tower2Selected == true && mouse.x > 0 && mouse.y > 0 && mouse.x < canvas.width && mouse.y < canvas.height && money >= 20 && canPlace == true) {
         money -= 20;
         towers.push({x: towerMouseX, y: towerMouseY, w: 30, dmg: 3, hasKill: false, r:75, color: "#aa00aa"});
         towerCount = towers.length;
@@ -229,25 +228,7 @@ function towerDmg() {
     }
 }
 
-//MAINLOOP
-function mainloop() {
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.beginPath();
-    ctx.moveTo(path[0].x, path[0].y);
-    for (let i = 0; i < path.length; i++) {
-        ctx.fillStyle = "black";
-        ctx.lineTo(path[i].x, path[i].y);
-        ctx.lineWidth = 20;
-        ctx.stroke();
-    }
-
-    for (let i=0; i < mobs.length; i++) {
-        ctx.fillStyle = mobs[i].color;
-        ctx.fillRect(mobs[i].x, mobs[i].y, mobs[i].w, mobs[i].h);
-    }
-
+function paintObjects() {
     for (let i=0; i < towers.length; i++) {
         ctx.beginPath();
         ctx.arc(towers[i].x, towers[i].y, towers[i].w / 2, 0, 2 * Math.PI);
@@ -256,18 +237,24 @@ function mainloop() {
         ctx.stroke;
     }
 
-    if (tower1Selected == true || tower2Selected == true) {
-        towerHighlight();
-        checkHitbox();
+    for (let i=0; i < mobs.length; i++) {
+        ctx.fillStyle = mobs[i].color;
+        ctx.fillRect(mobs[i].x, mobs[i].y, mobs[i].w, mobs[i].h);
     }
+}
 
-    if (money < 10) {document.getElementById('tower1Button').style.backgroundColor = "#b00000";}
-    else {document.getElementById('tower1Button').style.backgroundColor = "#4f4f4f";}
+function paintPath() {
+    ctx.beginPath();
+    ctx.moveTo(path[0].x, path[0].y);
+    for (let i = 0; i < path.length; i++) {
+        ctx.fillStyle = "black";
+        ctx.lineTo(path[i].x, path[i].y);
+        ctx.lineWidth = 20;
+        ctx.stroke();
+    }
+}
 
-    if (money < 20) {document.getElementById('tower2Button').style.backgroundColor = "#b00000";}
-    else {document.getElementById('tower2Button').style.backgroundColor = "#4f4f4f";}
-
-    //Update text
+function updateText() {
     if (hp <= 0) {document.getElementById('hpBarColor').style.width = 0; hp = 0;}
     else {document.getElementById('hpBarColor').style.width = hp + "%";}
     document.getElementById('moneyCount').innerHTML = "🪙: " + money;
@@ -275,7 +262,26 @@ function mainloop() {
     document.getElementById('roundCount').innerHTML = "Round: " + round;
     document.getElementById('towerCount').innerHTML = "Towers: " + towerCount;
     document.getElementById('mobCount').innerHTML = "Enemies: " + mobs.length;
+}
+
+function mainloop() {
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (money < 10) {document.getElementById('tower1Button').style.backgroundColor = "#b00000";}
+    else {document.getElementById('tower1Button').style.backgroundColor = "#4f4f4f";}
+    if (money < 20) {document.getElementById('tower2Button').style.backgroundColor = "#b00000";}
+    else {document.getElementById('tower2Button').style.backgroundColor = "#4f4f4f";}
     
+    paintPath();
+    paintObjects();
+    updateText();
+    
+    if (tower1Selected == true || tower2Selected == true) {
+        towerHighlight();
+        checkHitbox();
+    }
+
     requestAnimationFrame(mainloop);
 }
 mainloop();
