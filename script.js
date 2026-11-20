@@ -269,9 +269,9 @@ function mainloop() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     if (money < 10) {document.getElementById('tower1Button').style.backgroundColor = "#b00000";}
-    else {document.getElementById('tower1Button').style.backgroundColor = "#4f4f4f";}
+    else {document.getElementById('tower1Button').style.backgroundColor = "#008000";}
     if (money < 20) {document.getElementById('tower2Button').style.backgroundColor = "#b00000";}
-    else {document.getElementById('tower2Button').style.backgroundColor = "#4f4f4f";}
+    else {document.getElementById('tower2Button').style.backgroundColor = "#008000";}
     
     paintPath();
     paintObjects();
